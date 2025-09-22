@@ -12,20 +12,28 @@ function App() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleBooking = async (form) => {
-    try {
-      const response = await fetch("http://localhost:8080/api/bookings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+  const handleBooking = async (form, resetForm) => {
+  try {
+    const response = await fetch("http://localhost:8080/api/bookings", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(form),
+    });
 
-      setBookingSuccess(response.ok);
-    } catch (error) {
-      console.error(error);
-      setBookingSuccess(false);
-    }
-  };
+    if (!response.ok) throw new Error("Booking failed");
+
+    setBookingSuccess(true);
+    resetForm(); // ✅ clear the form only on success
+
+    // hide success message after 3s
+    setTimeout(() => setBookingSuccess(false), 3000);
+
+  } catch (error) {
+    console.error(error);
+    setBookingSuccess(false);
+  }
+};
+
 
   return (
     <div className="app-container">

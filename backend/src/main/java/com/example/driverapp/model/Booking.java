@@ -15,7 +15,8 @@ public class Booking {
     private String phone;
     private String pickupLocation;
     private LocalDateTime pickupTime;
-    private int durationHours;
 
-    // Removed driverId for now (you can add relation later)
+    private String service;   // <-- NEW field
+
+    private Integer durationHours; // changed to Integer so it can be null
 }
