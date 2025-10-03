@@ -89,8 +89,9 @@ const handleBooking = async (form) => {
       </section>
 
       {/* About Section */}
-      <section id="about" className="section about-section">
-        <h2>ABOUT US</h2>
+      <section id="about" className="about-container">
+        <div className="section about-section">
+          <h2>ABOUT US</h2>
         <div className="about-content">
           <ul>
             <li>We connect customers with professional drivers.</li>
@@ -100,6 +101,8 @@ const handleBooking = async (form) => {
             <img src={image2} alt="About us" />
           </div>
         </div>
+        </div>
+        
       </section>
 
       {/* Services Section */}

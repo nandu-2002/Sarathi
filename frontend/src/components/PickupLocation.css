@@ -1,0 +1,61 @@
+.pickup-container {
+  max-width: 500px;
+  margin: 0 auto;
+  font-family: sans-serif;
+}
+
+.pickup-container h2 {
+  text-align: center;
+}
+
+.current-location-btn {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #ff6600;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.search-input {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 5px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.predictions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.predictions-list li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+
+
+.map-container {
+  height: 300px;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.confirm-btn {
+  width: 100%;
+  padding: 10px;
+  background-color: #28a745;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
