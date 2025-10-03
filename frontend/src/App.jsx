@@ -12,7 +12,10 @@ function App() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleBooking = async (form, resetForm) => {
+  const [bookingError, setBookingError] = useState("");
+
+const handleBooking = async (form) => {
+  setBookingError(""); // reset previous errors
   try {
     const response = await fetch("http://localhost:8080/api/bookings", {
       method: "POST",
@@ -20,19 +23,23 @@ function App() {
       body: JSON.stringify(form),
     });
 
-    if (!response.ok) throw new Error("Booking failed");
+    const data = await response.json();
+
+    if (!response.ok) {
+      setBookingError(data?.message || "Booking failed, please check your input!");
+      return;
+    }
 
     setBookingSuccess(true);
-    resetForm(); // ✅ clear the form only on success
+    setBookingError(""); // clear any previous error
 
-    // hide success message after 3s
     setTimeout(() => setBookingSuccess(false), 3000);
-
   } catch (error) {
-    console.error(error);
-    setBookingSuccess(false);
+    console.error("Booking error:", error);
+    setBookingError("Network error! Please try again later.");
   }
 };
+
 
 
   return (
@@ -102,9 +109,12 @@ function App() {
 
       {/* Booking Form */}
       <section id="booking" className="booking-section">
-        <BookingForm onSubmit={handleBooking} />
-        {bookingSuccess && <p className="success-msg">✅ Booking confirmed successfully!</p>}
-      </section>
+  <BookingForm onSubmit={handleBooking} />
+  
+  {bookingSuccess && <p className="success-msg">✅ Booking confirmed successfully!</p>}
+  {bookingError && <p className="error-msg">❌ {bookingError}</p>}
+</section>
+
 
       {/* Contact Section */}
       <section id="contact" className="section contact-section">

@@ -13,10 +13,12 @@ public class Booking {
 
     private String customerName;
     private String phone;
-    private String pickupLocation;
     private LocalDateTime pickupTime;
+    private String service;
+    private Integer durationHours; // nullable if not hourly
 
-    private String service;   // <-- NEW field
-
-    private Integer durationHours; // changed to Integer so it can be null
+    // New fields for map-based location
+    private Double pickupLat;
+    private Double pickupLng;
+    private String pickupAddress;
 }
