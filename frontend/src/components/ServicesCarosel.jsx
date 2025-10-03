@@ -30,7 +30,7 @@ const ServicesCarousel = () => {
 
   return (
     <div className="carousel3d-section">
-      <h2 className="carousel-title">Our Services</h2>
+      <h2 className="carousel-title">OUR SERVICES</h2>
       <div className="carousel3d-wrapper">
         <div
           className="carousel3d"

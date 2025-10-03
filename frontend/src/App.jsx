@@ -121,7 +121,8 @@ const handleBooking = async (form) => {
 
       {/* Contact Section */}
       <section id="contact" className="section contact-section">
-        <h2>Contact Us</h2>
+        <h2>CONTACT US</h2>
+        <h1>Contact Now For Booking!</h1>
         <div className="contact-cards">
           <div className="contact-card email-card">
             <a href="mailto:support@driverondemand.com">
