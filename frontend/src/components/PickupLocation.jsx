@@ -4,7 +4,7 @@ import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 import "./PickupLocation.css";
 
-// Fix Leaflet marker icon
+// Fix Leaflet marker icons
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
   iconRetinaUrl:
@@ -15,13 +15,11 @@ L.Icon.Default.mergeOptions({
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-// Component to recenter map on new position
+// Recenter map component
 const RecenterMap = ({ position }) => {
   const map = useMap();
   useEffect(() => {
-    if (position) {
-      map.setView(position, 15); // Zoom closer to user location
-    }
+    if (position) map.setView(position, 15);
   }, [position, map]);
   return null;
 };
@@ -30,105 +28,129 @@ const PickupLocation = ({ setPickup }) => {
   const [position, setPosition] = useState(null);
   const [searchValue, setSearchValue] = useState("");
   const [predictions, setPredictions] = useState([]);
+  const [isFocused, setIsFocused] = useState(false);
 
-  
-  // Update pickup address automatically
+  // Reverse geocoding when position changes
   useEffect(() => {
     if (!position) return;
+
     fetch(
       `https://nominatim.openstreetmap.org/reverse?format=json&lat=${position.lat}&lon=${position.lng}`
     )
       .then((res) => res.json())
       .then((data) => {
-        setPickup({
-          lat: position.lat,
-          lng: position.lng,
-          address: data.display_name,
-        });
-        setSearchValue(data.display_name);
-      });
+        const address = data.display_name || "Unknown location";
+        setPickup({ lat: position.lat, lng: position.lng, address });
+        setSearchValue(address);
+      })
+      .catch((err) => console.error("Reverse geocoding failed:", err));
   }, [position, setPickup]);
 
   // Autocomplete search
   const handleSearchChange = (e) => {
-  setSearchValue(e.target.value);
-  if (!e.target.value) return setPredictions([]);
+    const value = e.target.value;
+    setSearchValue(value);
+    if (!value.trim()) return setPredictions([]);
 
-  fetch(
-    `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-      e.target.value
-    )}&addressdetails=1&limit=5`,
-    {
-      headers: {
-        "User-Agent": "SarathiApp/1.0 (your_email@example.com)", // required by Nominatim
-        "Referrer-Policy": "no-referrer",
-      },
-    }
-  )
-    .then((res) => res.json())
-    .then((data) => setPredictions(data))
-    .catch((err) => {
-      console.error("Failed to fetch locations:", err);
-      setPredictions([]);
-    });
-};
+    fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+        value
+      )}&addressdetails=1&limit=5`,
+      {
+        headers: {
+          "User-Agent": "SarathiApp/1.0 (your_email@example.com)",
+          "Referrer-Policy": "no-referrer",
+        },
+      }
+    )
+      .then((res) => res.json())
+      .then((data) => setPredictions(data))
+      .catch(() => setPredictions([]));
+  };
 
-
+  // Select a prediction
   const handleSelectPrediction = (place) => {
     setPosition({ lat: parseFloat(place.lat), lng: parseFloat(place.lon) });
     setPredictions([]);
+    setIsFocused(false);
   };
 
+  // Use current location (working like button version)
   const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      alert("Geolocation is not supported by your browser.");
+      return;
+    }
+
     navigator.geolocation.getCurrentPosition(
       (pos) => {
         setPosition({ lat: pos.coords.latitude, lng: pos.coords.longitude });
+        setPredictions([]);
+        setIsFocused(false);
       },
-      () => alert("Failed to get current location")
+      (err) => {
+        console.error("Failed to get location:", err);
+        alert("Failed to get current location. Please enable GPS.");
+      }
     );
   };
 
   return (
     <div className="pickup-container">
-      <button className="current-location-btn" onClick={handleUseCurrentLocation}>
-        Use Current Location
-      </button>
-
+      {/* Search input */}
       <input
         type="text"
         placeholder="Search for location"
         value={searchValue}
         onChange={handleSearchChange}
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setTimeout(() => setIsFocused(false), 200)}
         className="search-input"
       />
 
-      {predictions.length > 0 && (
+      {/* Dropdown */}
+      {isFocused && (
         <ul className="predictions-list">
-          {predictions.map((p) => (
-            <li key={p.place_id} onClick={() => handleSelectPrediction(p)}>
-              {p.display_name}
-            </li>
-          ))}
+          {/* 🔹 Use Current Location */}
+          <li
+            className="use-location-option"
+            onMouseDown={(e) => {
+              e.preventDefault(); // Prevent input blur
+              handleUseCurrentLocation();
+            }}
+          >
+            📍 Use Current Location
+          </li>
+
+          {predictions.length > 0 ? (
+            predictions.map((p) => (
+              <li key={p.place_id} onMouseDown={() => handleSelectPrediction(p)}>
+                {p.display_name}
+              </li>
+            ))
+          ) : (
+            searchValue && <li className="no-results">No matching locations found</li>
+          )}
         </ul>
       )}
 
-      
-      <div className="map-container">
-        <MapContainer
-          center={position || [10.1632, 76.6413]} // Default to India center
-          zoom={position ? 15 : 5}
-          style={{ height: "100%", width: "100%" }}
-        >
-          <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-          {position && <Marker position={position} />}
-          <RecenterMap position={position} />
-        </MapContainer>
-      </div>
-
+      {/* Map */}
       {position && (
-        <p style={{ fontSize: "0.9rem", marginTop: "4px" }}>
-          📍 Selected Address: {searchValue}
-        </p>
+        <div className="map-container">
+          <MapContainer
+            center={position}
+            zoom={15}
+            scrollWheelZoom={false}
+            style={{ height: "300px", width: "100%" }}
+          >
+            <TileLayer
+              attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a>'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
+            <Marker position={position}></Marker>
+            <RecenterMap position={position} />
+          </MapContainer>
+        </div>
       )}
     </div>
   );

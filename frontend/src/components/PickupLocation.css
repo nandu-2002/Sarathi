@@ -1,22 +1,9 @@
 .pickup-container {
-  max-width: 500px;
+  max-width: 480px;
+  width: 100%;
   margin: 0 auto;
   font-family: sans-serif;
-}
-
-.pickup-container h2 {
-  text-align: center;
-}
-
-.current-location-btn {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 10px;
-  background-color: #ff6600;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+  position: relative;
 }
 
 .search-input {
@@ -25,37 +12,54 @@
   margin-bottom: 5px;
   border-radius: 6px;
   border: 1px solid #ccc;
+  font-size: 15px;
 }
 
 .predictions-list {
-  list-style: none;
-  padding: 0;
-  margin: 0 0 10px 0;
+  position: absolute;
+  width: 100%;
+  background: #fff;
   border: 1px solid #ccc;
   border-radius: 6px;
-  max-height: 150px;
+  margin-top: 2px;
+  max-height: 180px;
   overflow-y: auto;
+  z-index: 1000;
+  list-style: none;
+  padding: 0;
 }
 
 .predictions-list li {
   padding: 10px;
   cursor: pointer;
+  transition: background 0.2s ease;
 }
 
+.predictions-list li:hover {
+  background-color: #f3f3f3;
+}
 
+.use-location-option {
+  font-weight: 600;
+  color: #ff6600;
+  border-bottom: 1px solid #eee;
+}
+
+.use-location-option:hover {
+  background-color: #fff4e6;
+}
+
+.no-results {
+  color: #777;
+  text-align: center;
+  font-size: 14px;
+  padding: 8px 0;
+}
 
 .map-container {
   height: 300px;
   width: 100%;
-  margin-bottom: 10px;
-}
-
-.confirm-btn {
-  width: 100%;
-  padding: 10px;
-  background-color: #28a745;
-  color: #fff;
-  border: none;
+  margin-top: 10px;
   border-radius: 6px;
-  cursor: pointer;
+  overflow: hidden;
 }

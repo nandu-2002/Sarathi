@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BookingForm from "./components/BookingForm";
 import "./App.css";
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -7,12 +7,96 @@ import TwitterIcon from '@mui/icons-material/Twitter';
 import WhatsAppIcon from '@mui/icons-material/WhatsApp';
 import image2 from "./assets/image2.png";
 import ServicesCarousel from "./components/ServicesCarosel";
+import ScrollReveal from "scrollreveal";
+import Typed from "typed.js";
+import anime from "animejs/lib/anime.es.js";
+
 
 function App() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [bookingError, setBookingError] = useState("");
+
+
+  useEffect(() => {
+    const typed = new Typed('.multiple-text', {
+      strings: [
+        "Sarathi — Your Personal Driver Partner",
+        "Book Reliable Drivers Anytime, Anywhere",
+        "Safe, Comfortable, and Hassle-Free Rides",
+        "Experience the Smart Way to Travel"
+      ],
+      typeSpeed: 60,
+      backSpeed: 40,
+      backDelay: 1000,
+      loop: true,
+      showCursor: true,
+      cursorChar: "|",
+    });
+
+
+  const footerTyped= new Typed(".footer-typed", {
+  strings: [
+    '" Drive Safe. Drive Smart. "',
+    '" Sarathi – Your Journey, Our Responsibility. "'
+  ],
+  typeSpeed: 80,
+  backSpeed: 40,
+  backDelay: 2000,
+  loop: true,
+  showCursor: false
+});
+
+
+    ScrollReveal().reveal('.home-content ,.about-heading, .contact-heading ,.contact-section h1' ,{ duration: 2000, distance: '80px', easing: 'ease-in-out', origin: 'top', delay:200, reset: false });
+    ScrollReveal().reveal(".reveal-text", {
+      duration: 1200,
+      distance: "40px",
+      origin: "bottom",
+      easing: "ease-out",
+      opacity: 0,
+      interval: 700, 
+      reset: false,  
+    });
+    ScrollReveal().reveal('.about-image', { duration: 2000, distance: '60px', easing: 'ease-in-out', origin: 'right', delay:200, reset: false });
+    ScrollReveal().reveal('.phone-card', { duration: 2000, distance: '60px', easing: 'ease-in-out', origin: 'right', delay:200, reset: true });
+    ScrollReveal().reveal(' .email-card', { duration: 2000, distance: '60px', easing: 'ease-in-out', origin: 'left', delay:200, reset: true });
+    
+
+     return () => {
+      typed.destroy();
+      footerTyped.destroy();
+    };
+    
+  },[]);
+ 
+ useEffect(() => {
+    const textWrapper = document.querySelector(".ml13");
+    textWrapper.innerHTML = textWrapper.textContent.replace(
+      /\S/g,
+      "<span class='letter'>$&</span>"
+    );
+
+    anime.timeline({ loop: true })
+      .add({
+        targets: ".ml13 .letter",
+        translateY: [100, 0],
+        translateZ: 0,
+        opacity: [0, 1],
+        easing: "easeOutExpo",
+        duration: 2400,
+        delay: (el, i) => 300 + 30 * i,
+      })
+      .add({
+        targets: ".ml13 .letter",
+        translateY: [0, -100],
+        opacity: [1, 0],
+        easing: "easeInExpo",
+        duration: 2200,
+        delay: (el, i) => 100 + 30 * i,
+      });
+  }, []);
 
 const handleBooking = async (form) => {
   setBookingError(""); // reset previous errors
@@ -75,34 +159,47 @@ const handleBooking = async (form) => {
 
       {/* Hero Section */}
       <section id="home" className="hero">
-        <h1>Welcome To Sarathi.</h1>
-        <p>Book a professional driver for your vehicle anytime, anywhere.</p>
-        <h2>Book your Ride By Click Here!</h2>
-        <button
+        <div className="home-content">
+          <h1>Welcome To <span className="ml13">Sarathi!</span></h1>
+          <p><span className="multiple-text"></span></p>
+          <h2>Book your Ride By Click Here!</h2>
+          <button
           className="glow-btn"
           onClick={() =>
             document.getElementById("booking").scrollIntoView({ behavior: "smooth" })
           }
-        >
-          Book Now
-        </button>
+          >
+            Book Now
+          </button>
+
+        </div>
+        
       </section>
 
       {/* About Section */}
-      <section id="about" className="about-container">
-        <div className="section about-section">
-          <h2>ABOUT US</h2>
+      <section id="about" className=" about-section">
+          <h2 className="about-heading">ABOUT <span>US</span></h2>
         <div className="about-content">
-          <ul>
-            <li>We connect customers with professional drivers.</li>
-            <li>Whether you need a driver for a few hours or a full day, we make it simple and safe.</li>
+          <ul> 
+            <li className="reveal-text">
+              Sarathi is a platform that connects customers with reliable, professional drivers — for their own vehicles. 
+              We understand that not everyone needs to rent a car; sometimes, all you need is a skilled driver who can take 
+              you safely to your destination. Whether it’s a daily commute, a business trip, or a late-night return, 
+              Sarathi makes it simple to find and book trusted drivers in just a few clicks.
+            </li>
+            <li className="reveal-text">
+              Whether you need a driver for a few hours or a full day, we make it simple and safe.
+            </li>
+            <li className="reveal-text">
+              Our mission is to make travel convenient, safe, and affordable by empowering customers to use their 
+              own vehicles more flexibly. Every driver in our network is verified, experienced, and trained to provide a courteous, 
+              professional service. With Sarathi, your journey becomes stress-free — you enjoy the ride, we take care of the driving.
+            </li>
           </ul>
           <div className="about-image">
             <img src={image2} alt="About us" />
           </div>
-        </div>
-        </div>
-        
+        </div>   
       </section>
 
       {/* Services Section */}
@@ -121,8 +218,8 @@ const handleBooking = async (form) => {
 
       {/* Contact Section */}
       <section id="contact" className="section contact-section">
-        <h2>CONTACT US</h2>
-        <h1>Contact Now For Booking!</h1>
+        <h2 className="contact-heading">CONTACT <span>US</span></h2>
+        <h1>Connect With Us For <span>Booking!</span></h1>
         <div className="contact-cards">
           <div className="contact-card email-card">
             <a href="mailto:support@driverondemand.com">
@@ -139,6 +236,8 @@ const handleBooking = async (form) => {
             </a>
           </div>
         </div>
+        <h3><span className="footer-typed"></span></h3>
+
       </section>
 
       {/* Footer */}

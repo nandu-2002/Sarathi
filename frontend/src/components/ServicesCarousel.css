@@ -3,7 +3,6 @@
   margin: 3rem auto;
   width: 100%;
   max-width: 900px;
-  font-family: 'Times New Roman', Times, serif;
 }
 
 .carousel-title {
@@ -17,7 +16,7 @@
   width: 100%;
   height: 400px;
   position: relative;
-  overflow: hidden;
+  
 }
 
 .carousel3d {
@@ -32,7 +31,6 @@
   position: absolute;
   top: 50%;
   left: 50%;
-  transform-style: preserve-3d;
   width: 250px;
   height: 300px;
   margin-left: -125px;
@@ -48,12 +46,16 @@
   font-weight: bold;
   text-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
   padding: 0;
-  transition: transform 0.5s, box-shadow 0.5s;
+  transition: transform 0.5s ease, box-shadow 0.5s ease;
+  transform: rotateY(var(--y)) translateZ(350px);
+  will-change: transform;
 }
 
+/* Hover pop-out relative to rotation */
 .carousel3d-card:hover {
-  transform: scale(1.05) translateZ(350px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
+  transform: rotateY(var(--y)) translateZ(400px) scale(1.05);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.3);
+  z-index: 10;
 }
 
 .carousel3d-card-title {
@@ -69,11 +71,11 @@
 /* Mobile responsiveness */
 @media (max-width: 768px) {
   .carousel3d-wrapper { height: 320px; }
-  .carousel3d-card { width: 180px; height: 240px; margin-left: -90px; margin-top: -120px; transform: rotateY(var(--i)) translateZ(300px);}
+  .carousel3d-card { width: 180px; height: 240px; margin-left: -90px; margin-top: -120px; transform: rotateY(var(--y)) translateZ(300px);}
 }
 
 @media (max-width: 480px) {
   .carousel3d-wrapper { height: 280px; }
-  .carousel3d-card { width: 150px; height: 200px; margin-left: -75px; margin-top: -100px; transform: rotateY(var(--i)) translateZ(240px);}
+  .carousel3d-card { width: 150px; height: 200px; margin-left: -75px; margin-top: -100px; transform: rotateY(var(--y)) translateZ(240px);}
   .carousel-title { font-size: 1.5rem; }
 }
