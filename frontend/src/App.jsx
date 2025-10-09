@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import BookingForm from "./components/BookingForm";
 import "./App.css";
 import FacebookIcon from '@mui/icons-material/Facebook';
@@ -11,12 +11,62 @@ import ScrollReveal from "scrollreveal";
 import Typed from "typed.js";
 import anime from "animejs/lib/anime.es.js";
 
+import bg1 from "../src/assets/nghttrafficphoto.png";
+import bg2 from "../src/assets/citynight.png";
+
+import bg3 from "../src/assets/driverbg.png";
+
+const backgrounds = [bg1, bg2, bg3];
 
 function App() {
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
 
   const [bookingError, setBookingError] = useState("");
+
+  const [activeSection, setActiveSection] = useState('home');
+
+
+   const [currentIndex, setCurrentIndex] = useState(0);
+  const [fade, setFade] = useState(true);
+  const offsetYRef = useRef(0);
+  const requestRef = useRef();
+
+  // Fade & background swap
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setFade(false);
+      setTimeout(() => {
+        setCurrentIndex((prev) => (prev + 1) % backgrounds.length);
+        setFade(true);
+      }, 400); // match CSS fade duration
+    }, 4000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Smooth parallax using requestAnimationFrame
+  useEffect(() => {
+    let targetY = 0;
+
+    const handleScroll = () => {
+      targetY = window.scrollY * 0.5; // parallax multiplier
+    };
+
+    const animate = () => {
+      offsetYRef.current += (targetY - offsetYRef.current) * 0.1; // smooth lerp
+      document.querySelector(".hero-bg").style.transform = `translateY(${offsetYRef.current}px)`;
+      requestRef.current = requestAnimationFrame(animate);
+    };
+
+    window.addEventListener("scroll", handleScroll);
+    animate();
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      cancelAnimationFrame(requestRef.current);
+    };
+  }, []);
+
 
 
   useEffect(() => {
@@ -98,6 +148,32 @@ function App() {
       });
   }, []);
 
+
+  useEffect(() => {
+    const sections = document.querySelectorAll('section');
+
+    const handleScroll = () => {
+      const scrollY = window.pageYOffset;
+
+      // Active link
+      sections.forEach(sec => {
+        const offsetTop = sec.offsetTop - 150;
+        const height = sec.offsetHeight;
+        const id = sec.getAttribute('id');
+
+        if (scrollY >= offsetTop && scrollY < offsetTop + height) {
+          setActiveSection(id);
+        }
+      });
+
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+
+
 const handleBooking = async (form) => {
   setBookingError(""); // reset previous errors
   try {
@@ -143,6 +219,7 @@ const handleBooking = async (form) => {
               <li key={id}>
                 <a
                   href={`#${id}`}
+                  className={activeSection === id ? 'active' : ''}
                   onClick={(e) => {
                     e.preventDefault();
                     document.getElementById(id).scrollIntoView({ behavior: "smooth" });
@@ -158,23 +235,34 @@ const handleBooking = async (form) => {
       </header>
 
       {/* Hero Section */}
-      <section id="home" className="hero">
-        <div className="home-content">
-          <h1>Welcome To <span className="ml13">Sarathi!</span></h1>
-          <p><span className="multiple-text"></span></p>
-          <h2>Book your Ride By Click Here!</h2>
-          <button
+     <section id="home" className="hero">
+      <div
+        className={`hero-bg ${fade ? "fade-in" : "fade-out"}`}
+        style={{
+          backgroundImage: `url(${backgrounds[currentIndex]})`,
+        }}
+      ></div>
+
+      <div className="home-content">
+        <h1>
+          Welcome To <span className="ml13">Sarathi!</span>
+        </h1>
+        <p>
+          <span className="multiple-text"></span>
+        </p>
+        <h2>Book your Ride By Click Here!</h2>
+        <button
           className="glow-btn"
           onClick={() =>
-            document.getElementById("booking").scrollIntoView({ behavior: "smooth" })
+            document
+              .getElementById("booking")
+              .scrollIntoView({ behavior: "smooth" })
           }
-          >
-            Book Now
-          </button>
-
-        </div>
-        
-      </section>
+        >
+          Book Now
+        </button>
+      </div>
+    </section>
 
       {/* About Section */}
       <section id="about" className=" about-section">
