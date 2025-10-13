@@ -1,5 +1,7 @@
 {
   "dependencies": {
+    "boxicons": "^2.1.4",
+    "lucide-react": "^0.545.0",
     "scrollreveal": "^4.0.9",
     "typed.js": "^2.1.0"
   }

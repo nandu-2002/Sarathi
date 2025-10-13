@@ -10,6 +10,8 @@ import ServicesCarousel from "./components/ServicesCarosel";
 import ScrollReveal from "scrollreveal";
 import Typed from "typed.js";
 import anime from "animejs/lib/anime.es.js";
+import 'boxicons/css/boxicons.min.css';
+
 
 import bg1 from "../src/assets/nghttrafficphoto.png";
 import bg2 from "../src/assets/citynight.png";
@@ -208,11 +210,13 @@ const handleBooking = async (form) => {
       <header className="top">
         <div className="logo">Sarathi</div>
         <nav className="navbar">
-          <div
-            className={`menu-toggle ${menuOpen ? "open" : ""}`}
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            ☰
+         
+          <div className={`menu-toggle ${menuOpen ? "open" : ""}`}>
+            <i
+        id="menu-icon"
+        className={`bx ${menuOpen ? 'bx-x' : 'bx-menu'}`}
+        onClick={() => setMenuOpen(!menuOpen)}
+      ></i>
           </div>
           <ul className={menuOpen ? "nav-links active" : "nav-links"}>
             {["home", "about", "services", "booking", "contact"].map((id) => (

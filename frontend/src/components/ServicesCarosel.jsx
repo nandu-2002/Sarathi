@@ -20,32 +20,28 @@ const ServicesCarousel = () => {
 
   const [current, setCurrent] = useState(0);
   const intervalRef = useRef(null);
-
   const rotationDegree = 360 / services.length;
 
   // Auto-rotate carousel
   useEffect(() => {
+    startAutoRotate();
+    return () => clearInterval(intervalRef.current);
+  }, []);
+
+  const startAutoRotate = () => {
+    clearInterval(intervalRef.current);
     intervalRef.current = setInterval(() => {
       setCurrent((prev) => (prev + 1) % services.length);
     }, 3000);
-    return () => clearInterval(intervalRef.current);
-  }, [services.length]);
+  };
 
   // ScrollReveal animation
   useEffect(() => {
-    ScrollReveal().reveal(".carousel3d-section", {
+    ScrollReveal().reveal(".carousel-title, .carousel3d-section", {
       duration: 2000,
       distance: "80px",
       easing: "ease-in-out",
       origin: "bottom",
-      delay: 200,
-      reset: false,
-    });
-    ScrollReveal().reveal(".carousel-title", {
-      duration: 2000,
-      distance: "60px",
-      easing: "ease-in-out",
-      origin: "top",
       delay: 200,
       reset: false,
     });
@@ -58,12 +54,11 @@ const ServicesCarousel = () => {
       </h2>
       <div
         className="carousel3d-wrapper"
-        onMouseEnter={() => clearInterval(intervalRef.current)}
-        onMouseLeave={() => {
-          intervalRef.current = setInterval(() => {
-            setCurrent((prev) => (prev + 1) % services.length);
-          }, 3000);
+        onMouseEnter={() => {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
         }}
+        onMouseLeave={() => startAutoRotate()}
       >
         <div
           className="carousel3d"
