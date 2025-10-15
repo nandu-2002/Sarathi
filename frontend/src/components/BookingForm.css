@@ -1,66 +1,126 @@
 .booking-form {
-  max-width: 480px;
-  width: 100%;
-  background: #ffffff;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  background: #1e1e1e;
+  padding: 1.8rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 1.2rem;
+  transition: all 0.3s ease;
+  
+}
+
+.booking-form:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
 .booking-form h3 {
-  margin: 0 0 10px;
-  font-size: 1.3rem;
-  color: #222;
   text-align: center;
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+  color: #00bcd4;
 }
+
+/* === Floating Label Inputs === */
+.form-row {
+  position: relative;
+  margin-top: 5px;
+}
+
+.input {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 1rem;
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 10px;
+  color: #fff;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.2);
+}
+
+/* === Floating Label Text === */
 
 .form-row {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
+  position: relative;
+  margin-top: 6px;
 }
 
-.form-row label {
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: #444;
-}
-
-.booking-form input {
-  padding: 10px;
-  font-size: 0.95rem;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  outline: none;
-  transition: border 0.2s ease;
-}
-
-.booking-form input:focus {
-  border-color: #007bff;
-}
-
-.booking-form button {
-  padding: 12px;
+.input {
+  width: 100%;
+  padding: 14px 14px 10px 14px;
   font-size: 1rem;
-  font-weight: bold;
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 10px;
   color: #fff;
-  background: #007bff;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.input:focus {
+  border-color: #00bcd4;
+  box-shadow: 0 0 0 3px rgba(0,188,212,0.15);
+}
+
+/* Label positioning logic */
+.form-row label {
+  position: absolute;
+  top: 50%;
+  left: 14px;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 0.95rem;
+  background-color: transparent;
+  pointer-events: none;
+  transition: all 0.2s ease;
+}
+
+/* When input is focused or has value */
+.input:focus + label,
+.input:not(:placeholder-shown) + label {
+  top: -8px;
+  left: 12px;
+  font-size: 0.75rem;
+  color: #00bcd4;
+  background: #1e1e1e;
+  padding: 0 5px;
+}
+
+/* Special case for datetime-local fields (fix overlap) */
+input[type="datetime-local"]::-webkit-datetime-edit-text,
+input[type="datetime-local"]::-webkit-datetime-edit-month-field,
+input[type="datetime-local"]::-webkit-datetime-edit-day-field,
+input[type="datetime-local"]::-webkit-datetime-edit-year-field,
+input[type="datetime-local"]::-webkit-datetime-edit-hour-field,
+input[type="datetime-local"]::-webkit-datetime-edit-minute-field,
+input[type="datetime-local"]::-webkit-datetime-edit-ampm-field {
+  color: #ccc;
+}
+
+
+/* === Buttons === */
+.booking-form button {
+  background: linear-gradient(90deg, #00bcd4, #2196f3);
   border: none;
-  border-radius: 6px;
+  border-radius: 12px;
+  padding: 14px;
+  color: #fff;
+  font-weight: 600;
+  font-size: 1rem;
   cursor: pointer;
-  transition: background 0.2s ease;
+  transition: all 0.3s ease;
 }
 
 .booking-form button:hover {
-  background: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 188, 212, 0.5);
 }
 
-/* Responsive */
-@media (max-width: 600px) {
-  .booking-form {
-    padding: 15px;
-  }
-}

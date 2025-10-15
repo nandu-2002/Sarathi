@@ -301,11 +301,15 @@ const handleBooking = async (form) => {
 
       {/* Booking Form */}
       <section id="booking" className="booking-section">
-  <BookingForm onSubmit={handleBooking} />
-  
-  {bookingSuccess && <p className="success-msg">✅ Booking confirmed successfully!</p>}
-  {bookingError && <p className="error-msg">❌ {bookingError}</p>}
+  <div className="booking-container">
+    <div className="booking-form-container">
+      <BookingForm onSubmit={handleBooking} />
+      {bookingSuccess && <p className="success-msg">✅ Booking confirmed successfully!</p>}
+      {bookingError && <p className="error-msg">❌ {bookingError}</p>}
+    </div>
+  </div>
 </section>
+
 
 
       {/* Contact Section */}
