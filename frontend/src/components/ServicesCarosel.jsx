@@ -19,33 +19,41 @@ const ServicesCarousel = () => {
   ];
 
   const [current, setCurrent] = useState(0);
-  const intervalRef = useRef(null);
+  const carouselRef = useRef(null);
+  const startX = useRef(0);
   const rotationDegree = 360 / services.length;
 
   // Auto-rotate carousel
   useEffect(() => {
-    startAutoRotate();
-    return () => clearInterval(intervalRef.current);
-  }, []);
-
-  const startAutoRotate = () => {
-    clearInterval(intervalRef.current);
-    intervalRef.current = setInterval(() => {
+    const interval = setInterval(() => {
       setCurrent((prev) => (prev + 1) % services.length);
-    }, 3000);
-  };
+    }, 3500);
+    return () => clearInterval(interval);
+  }, [services.length]);
 
   // ScrollReveal animation
   useEffect(() => {
     ScrollReveal().reveal(".carousel-title, .carousel3d-section", {
-      duration: 2000,
-      distance: "80px",
+      duration: 1500,
+      distance: "60px",
       easing: "ease-in-out",
       origin: "bottom",
       delay: 200,
       reset: false,
     });
   }, []);
+
+  // Drag / Swipe Support
+  const handleMouseDown = (e) => {
+    startX.current = e.clientX || e.touches[0].clientX;
+  };
+
+  const handleMouseUp = (e) => {
+    const endX = e.clientX || e.changedTouches[0].clientX;
+    const diff = startX.current - endX;
+    if (diff > 30) setCurrent((prev) => (prev + 1) % services.length);
+    if (diff < -30) setCurrent((prev) => (prev - 1 + services.length) % services.length);
+  };
 
   return (
     <div className="carousel3d-section">
@@ -54,11 +62,11 @@ const ServicesCarousel = () => {
       </h2>
       <div
         className="carousel3d-wrapper"
-        onMouseEnter={() => {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
-        }}
-        onMouseLeave={() => startAutoRotate()}
+        ref={carouselRef}
+        onMouseDown={handleMouseDown}
+        onMouseUp={handleMouseUp}
+        onTouchStart={handleMouseDown}
+        onTouchEnd={handleMouseUp}
       >
         <div
           className="carousel3d"
@@ -77,6 +85,16 @@ const ServicesCarousel = () => {
             </div>
           ))}
         </div>
+      </div>
+      {/* Indicator Dots */}
+      <div className="carousel-dots">
+        {services.map((_, index) => (
+          <span
+            key={index}
+            className={`dot ${index === current ? "active" : ""}`}
+            onClick={() => setCurrent(index)}
+          ></span>
+        ))}
       </div>
     </div>
   );

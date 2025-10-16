@@ -1,5 +1,5 @@
 .booking-form {
-  background: #1e1e1e;
+  background: linear-gradient(145deg, #1e1e1e, #222);
   padding: 1.8rem;
   border-radius: 16px;
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
@@ -7,7 +7,9 @@
   flex-direction: column;
   gap: 1.2rem;
   transition: all 0.3s ease;
-  
+  max-width: 450px;
+  margin: 0 auto;
+  width: 100%;
 }
 
 .booking-form:hover {
@@ -31,30 +33,6 @@
 
 .input {
   width: 100%;
-  padding: 12px 14px;
-  font-size: 1rem;
-  background: #2a2a2a;
-  border: 1px solid #333;
-  border-radius: 10px;
-  color: #fff;
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.input:focus {
-  border-color: #00bcd4;
-  box-shadow: 0 0 0 3px rgba(0, 188, 212, 0.2);
-}
-
-/* === Floating Label Text === */
-
-.form-row {
-  position: relative;
-  margin-top: 6px;
-}
-
-.input {
-  width: 100%;
   padding: 14px 14px 10px 14px;
   font-size: 1rem;
   background: #2a2a2a;
@@ -66,11 +44,11 @@
 }
 
 .input:focus {
-  border-color: #00bcd4;
-  box-shadow: 0 0 0 3px rgba(0,188,212,0.15);
+  border-color: transparent;
+  box-shadow: 0 0 8px 2px rgba(0, 188, 212, 0.5);
 }
 
-/* Label positioning logic */
+/* Label positioning */
 .form-row label {
   position: absolute;
   top: 50%;
@@ -78,9 +56,8 @@
   transform: translateY(-50%);
   color: #999;
   font-size: 0.95rem;
-  background-color: transparent;
   pointer-events: none;
-  transition: all 0.2s ease;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 /* When input is focused or has value */
@@ -94,7 +71,7 @@
   padding: 0 5px;
 }
 
-/* Special case for datetime-local fields (fix overlap) */
+/* Datetime text color fix */
 input[type="datetime-local"]::-webkit-datetime-edit-text,
 input[type="datetime-local"]::-webkit-datetime-edit-month-field,
 input[type="datetime-local"]::-webkit-datetime-edit-day-field,
@@ -104,7 +81,6 @@ input[type="datetime-local"]::-webkit-datetime-edit-minute-field,
 input[type="datetime-local"]::-webkit-datetime-edit-ampm-field {
   color: #ccc;
 }
-
 
 /* === Buttons === */
 .booking-form button {
@@ -120,7 +96,117 @@ input[type="datetime-local"]::-webkit-datetime-edit-ampm-field {
 }
 
 .booking-form button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0, 188, 212, 0.5);
+  transform: translateY(-3px);
+  background: linear-gradient(90deg, #26c6da, #42a5f5);
+  box-shadow: 0 6px 20px rgba(0, 188, 212, 0.6);
 }
 
+/* ===== RESPONSIVENESS ===== */
+
+/* Tablets (<=768px) */
+@media (max-width: 768px) {
+  .booking-form {
+    padding: 1.5rem;
+    max-width: 90%;
+  }
+
+  .booking-form h3 {
+    font-size: 1.4rem;
+  }
+
+  .input {
+    font-size: 0.95rem;
+    padding: 12px;
+  }
+
+  .booking-form button {
+    font-size: 0.95rem;
+    padding: 12px;
+  }
+}
+
+/* Small phones (<=480px) */
+@media (max-width: 480px) {
+  .booking-form {
+    padding: 1.2rem;
+    border-radius: 12px;
+    gap: 1rem;
+    max-width: 95%;
+  }
+
+  .booking-form h3 {
+    font-size: 1.25rem;
+  }
+
+  .input {
+    font-size: 0.9rem;
+    padding: 10px;
+  }
+
+  .form-row label {
+    font-size: 0.85rem;
+  }
+
+  .booking-form button {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Tiny screens (400px and below) */
+@media (max-width: 400px) {
+  .booking-form {
+    padding: 0.9rem;
+    border-radius: 10px;
+    max-width: 100%;
+    width: 95%;
+    margin: 0 auto;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+  }
+
+  .booking-form h3 {
+    font-size: 1.05rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .input {
+    font-size: 0.85rem;
+    padding: 9px 10px;
+    border-radius: 8px;
+  }
+
+  .form-row {
+    margin-top: 4px;
+  }
+
+  .form-row label {
+    font-size: 0.8rem;
+    left: 10px;
+  }
+
+  .booking-form button {
+    width: 100%;
+    padding: 10px;
+    font-size: 0.85rem;
+    border-radius: 10px;
+  }
+}
+
+/* Very narrow devices (<=360px) */
+@media (max-width: 360px) {
+  .booking-form {
+    padding: 0.8rem;
+    border-radius: 8px;
+    width: 280px;
+  }
+
+  .input {
+    font-size: 0.8rem;
+    padding: 8px;
+  }
+
+  .booking-form button {
+    padding: 9px;
+    font-size: 0.8rem;
+  }
+}
