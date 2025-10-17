@@ -23,11 +23,11 @@
   position: relative;
   cursor: grab;
 }
-
 .carousel3d-wrapper:active {
   cursor: grabbing;
 }
 
+/* Carousel 3D */
 .carousel3d {
   width: 100%;
   height: 100%;
@@ -35,7 +35,18 @@
   transform-style: preserve-3d;
   transition: transform 1.2s cubic-bezier(0.77, 0, 0.175, 1);
 }
+.carousel3d-wrapper.dragging .carousel3d-card:hover {
+  transform: rotateY(var(--y)) translateZ(350px) scale(1);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+  z-index: auto;
+}
 
+/* Make carousel3d respond instantly while dragging */
+.carousel3d.dragging {
+  transition: none !important;
+}
+
+/* Cards */
 .carousel3d-card {
   position: absolute;
   top: 50%;
@@ -61,8 +72,8 @@
 }
 
 /* Hover pop-out */
-.carousel3d-card:hover {
-  transform: rotateY(var(--y)) translateZ(400px) scale(1.05);
+.carousel3d-wrapper:not(.dragging) .carousel3d-card:hover {
+  transform: rotateY(var(--y)) translateZ(380px) scale(1.03);
   box-shadow: 0 12px 30px rgba(0, 0, 0, 0.3);
   z-index: 10;
 }
@@ -70,14 +81,14 @@
 .carousel3d-card-title {
   width: 100%;
   padding: 10px 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0));
+  background: linear-gradient(to top, rgba(0,0,0,0.6), rgba(0,0,0,0));
   border-bottom-left-radius: 1rem;
   border-bottom-right-radius: 1rem;
   text-align: center;
   font-size: 1.1rem;
 }
 
-/* Indicator dots */
+/* Dots */
 .carousel-dots {
   margin-top: 20px;
 }
@@ -95,33 +106,21 @@
   background: #ff7b00;
 }
 
-/* Mobile responsiveness */
+/* Responsive */
 @media (max-width: 768px) {
-  .carousel3d-wrapper {
-    height: 320px;
-    overflow: hidden;
-  }
+  .carousel3d-wrapper { height: 320px; overflow: hidden; }
   .carousel3d-card {
-    width: 180px;
-    height: 240px;
-    margin-left: -90px;
-    margin-top: -120px;
+    width: 180px; height: 240px;
+    margin-left: -90px; margin-top: -120px;
     transform: rotateY(var(--y)) translateZ(260px);
   }
 }
-
 @media (max-width: 480px) {
-  .carousel3d-wrapper {
-    height: 280px;
-  }
+  .carousel3d-wrapper { height: 280px; }
   .carousel3d-card {
-    width: 150px;
-    height: 200px;
-    margin-left: -75px;
-    margin-top: -100px;
+    width: 150px; height: 200px;
+    margin-left: -75px; margin-top: -100px;
     transform: rotateY(var(--y)) translateZ(180px);
   }
-  .carousel-title {
-    font-size: 1.5rem;
-  }
+  .carousel-title { font-size: 1.5rem; }
 }

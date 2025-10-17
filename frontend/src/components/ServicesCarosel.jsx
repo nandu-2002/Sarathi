@@ -19,8 +19,12 @@ const ServicesCarousel = () => {
   ];
 
   const [current, setCurrent] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   const carouselRef = useRef(null);
   const startX = useRef(0);
+  const lastX = useRef(0);
+  const velocity = useRef(0);
+  const animationFrame = useRef(null);
   const rotationDegree = 360 / services.length;
 
   // Auto-rotate carousel
@@ -31,7 +35,7 @@ const ServicesCarousel = () => {
     return () => clearInterval(interval);
   }, [services.length]);
 
-  // ScrollReveal animation
+  // ScrollReveal
   useEffect(() => {
     ScrollReveal().reveal(".carousel-title, .carousel3d-section", {
       duration: 1500,
@@ -43,16 +47,40 @@ const ServicesCarousel = () => {
     });
   }, []);
 
-  // Drag / Swipe Support
+  // Inertia animation
+  const animateInertia = () => {
+    if (Math.abs(velocity.current) < 0.01) {
+      cancelAnimationFrame(animationFrame.current);
+      velocity.current = 0;
+      return;
+    }
+    setCurrent((prev) => {
+      let next = prev + (velocity.current > 0 ? -1 : 1);
+      if (next < 0) next = services.length - 1;
+      if (next >= services.length) next = 0;
+      return next;
+    });
+    velocity.current *= 0.95; // friction
+    animationFrame.current = requestAnimationFrame(animateInertia);
+  };
+
   const handleMouseDown = (e) => {
+    setIsDragging(true);
+    cancelAnimationFrame(animationFrame.current);
     startX.current = e.clientX || e.touches[0].clientX;
+    lastX.current = startX.current;
+  };
+
+  const handleMouseMove = (e) => {
+    if (!isDragging) return;
+    const x = e.clientX || e.touches[0].clientX;
+    velocity.current = x - lastX.current;
+    lastX.current = x;
   };
 
   const handleMouseUp = (e) => {
-    const endX = e.clientX || e.changedTouches[0].clientX;
-    const diff = startX.current - endX;
-    if (diff > 30) setCurrent((prev) => (prev + 1) % services.length);
-    if (diff < -30) setCurrent((prev) => (prev - 1 + services.length) % services.length);
+    setIsDragging(false);
+    animationFrame.current = requestAnimationFrame(animateInertia);
   };
 
   return (
@@ -60,16 +88,20 @@ const ServicesCarousel = () => {
       <h2 className="carousel-title">
         OUR <span>SERVICES</span>
       </h2>
+
       <div
-        className="carousel3d-wrapper"
+        className={`carousel3d-wrapper ${isDragging ? "dragging" : ""}`}
         ref={carouselRef}
         onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
         onMouseUp={handleMouseUp}
+        onMouseLeave={() => { if(isDragging) handleMouseUp(); }}
         onTouchStart={handleMouseDown}
+        onTouchMove={handleMouseMove}
         onTouchEnd={handleMouseUp}
       >
         <div
-          className="carousel3d"
+          className={`carousel3d ${isDragging ? "dragging" : ""}`}
           style={{ transform: `rotateY(${-current * rotationDegree}deg)` }}
         >
           {services.map((service, index) => (
@@ -86,7 +118,8 @@ const ServicesCarousel = () => {
           ))}
         </div>
       </div>
-      {/* Indicator Dots */}
+
+      {/* Dots */}
       <div className="carousel-dots">
         {services.map((_, index) => (
           <span
